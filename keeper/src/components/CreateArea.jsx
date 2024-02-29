@@ -1,5 +1,8 @@
 import { useState } from "react";
 import {v4 as uuidv4} from "uuid"
+import AddIcon from '@mui/icons-material/Add';
+import Fab from '@mui/material/Fab';
+import Zoom from '@mui/material/Zoom';
 
 function CreateArea(props) {
   
@@ -17,21 +20,31 @@ function CreateArea(props) {
       }
     })
   }
+
+
+  const [clicked, setClicked] = useState(false)
+
+  function onClick(event) {
+    setClicked(true)
+  }
   
   return (
     <div>
-      <form>
-        <input name="title" placeholder="Title" onChange={onChange} value={input.title} />
-        <textarea name="body" placeholder="Take a note..." rows="3" onChange={onChange} value={input.body} />
-        <button onClick={(event) => {
-          props.onClick(input)
-          setInput({
-            id: uuidv4(),
-            title: "",
-            body: ""
-          })
-          event.preventDefault()
-        }}>Add</button>
+      <form className="create-note">
+        {clicked && <input name="title" placeholder="Title" onChange={onChange} value={input.title} />}
+        <textarea name="body" placeholder="Take a note..." rows={clicked ? "3" : "1"} onClick={onClick} onChange={onChange} value={input.body} />
+        <Zoom in={clicked}>
+          <Fab onClick={(event) => {
+            props.onClick(input)
+            setInput({
+              id: uuidv4(),
+              title: "",
+              body: ""
+            })
+            event.preventDefault()
+          }}><AddIcon /></Fab>
+        </Zoom>
+        
       </form>
     </div>
   );
