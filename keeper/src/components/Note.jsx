@@ -1,8 +1,9 @@
-function Note() {
+function Note(props) {
     return (
         <div className="note">
-            <h1>This is the Title</h1>
-            <p>This is the Content</p>
+            <h1>{props.title}</h1>
+            <p>{props.body}</p>
+            <button onClick={() => {props.onClick(props.id)}}>DELETE</button>
         </div>
     )
 }
