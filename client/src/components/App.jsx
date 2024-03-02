@@ -3,10 +3,18 @@ import Footer from "./Footer"
 import Note from "./Note"
 import CreateArea from "./CreateArea"
 import { useState, useEffect } from "react"
+import useFetch from "./useFetch"
 
 function App() {
 
+    const { data, loading, error } = useFetch("http://localhost:5000/notes")
     const [notes, setNotes] = useState([])
+
+    useEffect(() => {
+        if (data) {
+            setNotes([...data])
+        }
+    }, [data])
 
     function addNote(note) {
         setNotes((prevNotes) => {
@@ -37,17 +45,13 @@ function App() {
             })
     }
 
-    useEffect(() => {
-        fetch("http://localhost:5000/notes")
-            .then(res => res.json())
-            .then(data => setNotes(data))
-    }, [])
-
     return (
         <div>
             <Header />
             <CreateArea onClick={addNote} />
-            {notes.map((note) => {
+            {error && <p>Encountered error.</p>}
+            {loading && <p>Loading...</p>}
+            {!loading && notes.map((note) => {
                 return <Note key={note.id} id={note.id} title={note.title} body={note.body} onClick={deleteNote} />
             })}
             <Footer />
